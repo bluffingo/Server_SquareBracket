@@ -114,13 +114,13 @@ function sbListenClient::onLine(%this, %line)
 		}
 	} else {
 		%system = %messageShit.get("system");
-		talk(%system);
+		messageAll('', "<font:palatino linotype:18><color:AAAAAA>(sbChat) " @ %system);
 	}
 
 	if (getFieldCount(%line) > 2)
 	{
 		//%key = getField(%line, 0);
-		//if (strPos(%key, $Pref::Server::server2blkey) != 0)
+		//if (strPos(%key, $Pref::Server::sbchatkey) != 0)
 		//{
 		//	error("ERROR: sbListenClient::onLine - key mismatch!");
 		//	return;
@@ -136,6 +136,18 @@ package SquareBracket
 	{
 		sendMessage(%client, %message, "message");
 		parent::serverCmdMessageSent(%client, %message);
+	}
+	
+	function GameConnection::autoAdminCheck (%client)
+	{
+		sendMessage(%client, "joined the game", "connection");
+		parent::onDrop(%client);
+	}
+	
+	function GameConnection::onDrop(%client) 
+	{
+		sendMessage(%client, "left the game", "connection");
+		parent::onDrop(%client);
 	}
 };
 
