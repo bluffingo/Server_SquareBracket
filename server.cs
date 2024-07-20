@@ -150,7 +150,7 @@ package SquareBracket
 	function GameConnection::autoAdminCheck (%client)
 	{
 		sendMessage(%client, "joined the game", "connection");
-		parent::onDrop(%client);
+		parent::autoAdminCheck(%client);
 	}
 	
 	function GameConnection::onDrop(%client) 
