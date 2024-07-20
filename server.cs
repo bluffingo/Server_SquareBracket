@@ -100,34 +100,43 @@ function sbListenClient::onLine(%this, %line)
 	echo(%messageShit);
 
 	%message = %messageShit.get("message");
+	%system = %messageShit.get("notification");
 	
 	if (%message !$= "") {
+		%client = %messageShit.get("client");
 		%username = %messageShit.get("username");
-
-		// the sbchat protocol appends "Discord-" to any messages sent from discord, so we can easily figure out if
-		// the message is from discord or from squarebracket directly.
-		if (strPos(%username, "Discord-") == 0) {
-			%cleanUsername = getSubStr(%username, 8, strlen(%username) - 8);
-			messageAll('', "<color:5865F2>(Discord) " @ %cleanUsername @ "\c6: " @ %message);
+		
+		if (%client $= "discord") {
+			messageAll('', "<color:5865F2>[Discord] " @ %username @ "\c6: " @ %message);
+		} else if (%client $= "squarebracket") {
+			messageAll('', "<color:FF8A00>[squareBracket] " @ %username @ "\c6: " @ %message);
 		} else {
-			messageAll('', "<color:FF8A00>(squareBracket) " @ %username @ "\c6: " @ %message);
+			messageAll('', "<color:EEEEEE>[" @ %client @ "] " @ %username @ "\c6: " @ %message);
+		}
+	} else if (%system !$= "") {
+		%client = %messageShit.get("client");
+		
+		if (%client $= "squarebracket") {
+			messageAll('', "<font:palatino linotype:18><color:AAAAAA>[squareBracket] " @ %system);
+		} else {
+			messageAll('', "<font:palatino linotype:18><color:AAAAAA>[sbChat] " @ %system);
 		}
 	} else {
-		%system = %messageShit.get("system");
-		messageAll('', "<font:palatino linotype:18><color:AAAAAA>(sbChat) " @ %system);
+		messageAll('', "<font:palatino linotype:18><color:AAAAAA>[sbChat] Unknown message / Fail?");
 	}
 
-	if (getFieldCount(%line) > 2)
-	{
+	//deadcode from conan's farming here
+	//if (getFieldCount(%line) > 2)
+	//{
 		//%key = getField(%line, 0);
 		//if (strPos(%key, $Pref::Server::sbchatkey) != 0)
 		//{
 		//	error("ERROR: sbListenClient::onLine - key mismatch!");
 		//	return;
 		//}
-		messageAll('', "<color:7289DA>@" @ getField(%line, 1) @ "\c6: " @ getFields(%line, 2, 200));
-		echo("[DISCORD] @" @ getField(%line, 1) @ "\c6: " @ getFields(%line, 2, 200));
-	}
+		//messageAll('', "<color:7289DA>@" @ getField(%line, 1) @ "\c6: " @ getFields(%line, 2, 200));
+		//echo("[DISCORD] @" @ getField(%line, 1) @ "\c6: " @ getFields(%line, 2, 200));
+	//}
 }
 
 package SquareBracket
